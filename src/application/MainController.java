@@ -99,7 +99,7 @@ public class MainController {
 
 		}
 		
-		bar.setMin(0);
+		/*bar.setMin(0);
 		bar.setOrientation(Orientation.VERTICAL);
 		
 		bar.valueProperty().addListener(new ChangeListener<Number>() {
@@ -109,7 +109,7 @@ public class MainController {
 				
 			}
 			
-		});
+		});*/
 	}
 
 	@FXML
