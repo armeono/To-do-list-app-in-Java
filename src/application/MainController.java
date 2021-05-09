@@ -16,6 +16,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -36,6 +37,10 @@ public class MainController {
 	String passwordConnect = "<@pgLX3t-zRs=+xj";
 
 	Connection db = new Connection();
+	
+	protected Stage stage;
+	protected Scene scene;
+	protected Parent root;
 
 	@FXML
 	private VBox vBox = new VBox();
@@ -45,14 +50,19 @@ public class MainController {
 
 	@FXML
 	private TextField textField;
-	
+
 	@FXML
 	private ScrollBar bar = new ScrollBar();
 
-	List<CheckBox> listOfChecks = new ArrayList<>();
+	List<CheckBox> listOfChecocks = new ArrayList<>();
+
+	
 
 	@FXML
 	CheckBox check = new CheckBox();
+	
+	@FXML 
+	private Button switchButton;
 
 	EventHandler eh = new EventHandler<ActionEvent>() {
 
@@ -60,16 +70,26 @@ public class MainController {
 		public void handle(ActionEvent event) {
 
 			if (event.getSource() instanceof CheckBox) {
+
+				
+
 				CheckBox chk = (CheckBox) event.getSource();
+				
+				String doneTask = chk.getText();
+				
 				vBox.getChildren().remove(chk);
-				listOfChecks.remove(chk);
+				
+				listOfChecocks.remove(chk);
+		
+				
+				db.completedTasks(doneTask);
 
 				try {
 					java.sql.Connection connection = DriverManager.getConnection(url, username, passwordConnect);
-					String sql = "DELETE FROM todotable WHERE tasks = '" + chk.getText() +"'";
-					PreparedStatement stmt;
-					stmt = connection.prepareStatement(sql);
+					String sql = "DELETE FROM todotable WHERE tasks = '" + chk.getText() + "'";
+					PreparedStatement stmt = connection.prepareStatement(sql);
 					stmt.executeUpdate();
+
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -99,17 +119,9 @@ public class MainController {
 
 		}
 		
-		/*bar.setMin(0);
-		bar.setOrientation(Orientation.VERTICAL);
-		
-		bar.valueProperty().addListener(new ChangeListener<Number>() {
+	
 
-			public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
-				vBox.setLayoutY(-newValue.doubleValue());
-				
-			}
-			
-		});*/
+
 	}
 
 	@FXML
@@ -122,8 +134,10 @@ public class MainController {
 		check.setOnAction(eh);
 
 		check.setTextFill(Color.WHITE);
+		
+		
 
-		listOfChecks.add(check);
+		listOfChecocks.add(check);
 
 		db.connect(name);
 
@@ -142,7 +156,7 @@ public class MainController {
 
 		check.setTextFill(Color.WHITE);
 
-		listOfChecks.add(check);
+		listOfChecocks.add(check);
 
 		addToPane();
 
@@ -154,8 +168,23 @@ public class MainController {
 		vBox.setSpacing(10);
 		vBox.autosize();
 
-		listOfChecks.forEach(box -> vBox.getChildren().add(box));
+		listOfChecocks.forEach(box -> vBox.getChildren().add(box));
 
+	}
+	
+	@FXML
+	void switchScene(ActionEvent event) throws IOException {
+		
+		
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("completedtasks.fxml"));
+		Parent root = loader.load();
+		stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+		Scene scene = new Scene(root);
+		
+		String css = this.getClass().getResource("application.css").toExternalForm();
+		scene.getStylesheets().add(css);
+		stage.setScene(scene);
+		stage.show();
 	}
 
 }

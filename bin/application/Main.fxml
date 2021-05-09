@@ -20,5 +20,6 @@
       <VBox fx:id="vBox" layoutX="40.0" layoutY="80.0" prefHeight="220.0" prefWidth="503.0">
          </VBox>
       <Button fx:id="addButton" layoutX="174.0" layoutY="350.0" mnemonicParsing="false" onAction="#add" prefHeight="27.0" prefWidth="253.0" style="-fx-background-color: #343434; -fx-border-radius: 20; -fx-background-radius: 20;" text="Add a task" textFill="#8296e0" />
+      <Button layoutX="448.0" layoutY="351.0" mnemonicParsing="false" onAction="#switchScene" prefHeight="17.0" prefWidth="114.0" style="-fx-border-radius: 20; -fx-background-radius: 20; -fx-background-color: #343434;" text="Completed tasks" textFill="#8296e0" />
    </children>
 </AnchorPane>
