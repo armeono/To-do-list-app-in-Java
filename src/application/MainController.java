@@ -1,5 +1,6 @@
 package application;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -27,6 +28,8 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -37,7 +40,7 @@ public class MainController {
 	String passwordConnect = "<@pgLX3t-zRs=+xj";
 
 	Connection db = new Connection();
-	
+
 	protected Stage stage;
 	protected Scene scene;
 	protected Parent root;
@@ -56,13 +59,17 @@ public class MainController {
 
 	List<CheckBox> listOfChecocks = new ArrayList<>();
 
-	
-
 	@FXML
 	CheckBox check = new CheckBox();
-	
-	@FXML 
+
+	@FXML
 	private Button switchButton;
+
+	String path = "/Users/ahadzigrahic/Downloads/Ding Sound Effect.mp3";
+
+	Media media = new Media(new File(path).toURI().toString());
+
+	MediaPlayer player = new MediaPlayer(media);
 
 	EventHandler eh = new EventHandler<ActionEvent>() {
 
@@ -70,18 +77,19 @@ public class MainController {
 		public void handle(ActionEvent event) {
 
 			if (event.getSource() instanceof CheckBox) {
-
 				
+				player.play();
+
+				player.seek(player.getStartTime());
 
 				CheckBox chk = (CheckBox) event.getSource();
-				
+
 				String doneTask = chk.getText();
-				
+
 				vBox.getChildren().remove(chk);
-				
+
 				listOfChecocks.remove(chk);
-		
-				
+
 				db.completedTasks(doneTask);
 
 				try {
@@ -94,6 +102,8 @@ public class MainController {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				
 
 			}
 
@@ -118,9 +128,6 @@ public class MainController {
 			getTask(taskID);
 
 		}
-		
-	
-
 
 	}
 
@@ -134,8 +141,6 @@ public class MainController {
 		check.setOnAction(eh);
 
 		check.setTextFill(Color.WHITE);
-		
-		
 
 		listOfChecocks.add(check);
 
@@ -171,16 +176,15 @@ public class MainController {
 		listOfChecocks.forEach(box -> vBox.getChildren().add(box));
 
 	}
-	
+
 	@FXML
 	void switchScene(ActionEvent event) throws IOException {
-		
-		
+
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("completedtasks.fxml"));
 		Parent root = loader.load();
 		stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 		Scene scene = new Scene(root);
-		
+
 		String css = this.getClass().getResource("application.css").toExternalForm();
 		scene.getStylesheets().add(css);
 		stage.setScene(scene);
